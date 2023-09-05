@@ -41,6 +41,11 @@ const validadeBody = async (request, response, next) => {
   next();
 };
 
+const validadeCredentials = async (req, res) => {
+  //TODO VALIDACAO DE CREDENCIAS
+};
+
 module.exports = {
   validadeBody,
+  validadeCredentials,
 };
