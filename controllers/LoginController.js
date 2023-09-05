@@ -1,14 +1,26 @@
+const { json } = require("express");
 const jwt = require("jsonwebtoken");
 const mysql = require("mysql2/promise");
-const SECRET = "9817236498172346981237";
+
+const generateToken = async (req, res) => {
+  const { email } = req.body;
+
+  const jwtToken = jwt.sign(
+    { userEmail: email },
+    process.env.JWT_TOKEN_SECRET,
+    {
+      expiresIn: 3600,
+    }
+  );
+  res.status(200).json({ token: jwtToken });
+};
 
 const createUser = async (request, response) => {
-  const connection = mysql.createPool({
-    host: "localhost",
-    user: "academia-api",
-    password: "6414",
-    database: "academia-dev",
-    port: "3306",
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
   });
 
   const body = request.body;
@@ -26,28 +38,7 @@ const createUser = async (request, response) => {
   return response.status(201).json();
 };
 
-const Authentication = async function (req, res) {
-  const token = req.headers["x-acess-token"];
-  jwt.verify(token, SECRET, (err, decoded) => {
-    if (err) return res.status(401).end();
-    req.userId = decoded.userEmail;
-    return res.status(200).end();
-  });
-};
-
-const VerifyToken = async function (req, res, next) {
-  const token = req.headers["x-acess-token"];
-  jwt.verify(token, SECRET, (err, decoded) => {
-    if (err) return res.status(401).end();
-    req.userId = decoded.userEmail;
-    next();
-  });
-};
-
-// export const VerifyApiStatus = async function (req, res) {
-//   return res.status(200).end();
-// };
-
 module.exports = {
   createUser,
+  generateToken,
 };
