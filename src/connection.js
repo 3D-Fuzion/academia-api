@@ -1,11 +1,11 @@
-import { createPool } from "mysql2/promise";
+const mysql = require("mysql2/promise");
 
-const connection = createPool({
-  host: "containers-us-west-158.railway.app",
-  user: "root",
-  password: "ZcqqozD1vqNPulKl0PG1",
-  database: "railway",
-  port: "5922",
+const connection = mysql.createPool({
+  host: "localhost",
+  user: "academia-api",
+  password: "6414",
+  database: "academia-dev",
+  port: "3306",
 });
 
-export default connection;
+module.exports = connection;
