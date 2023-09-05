@@ -15,5 +15,6 @@ router.post(
   loginController.generateToken
 );
 router.put("/manager/solicitation", managerController.acceptSolicitaction);
+router.get("/manager/solicitation", managerController.checkSolicitations);
 
 module.exports = router;
