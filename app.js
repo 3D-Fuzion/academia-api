@@ -1,8 +1,8 @@
-import express, { json } from "express";
-import router from "./src/router";
+const express = require("express");
+const router = require("./src/router");
 const app = express();
 
-app.use(json());
+app.use(express.json());
 app.use(router);
 
-export default app;
+module.exports = app;

@@ -1,16 +1,8 @@
-import { Router } from "express";
-const router = Router();
-import {
-  getAll,
-  createTask,
-  deleteTask,
-  updateTask,
-} from "./controllers/taskController";
-import { validadeBody } from "./middlewares/tasksMiddlewares";
+const express = require("express");
+const router = express.Router();
+const loginController = require("../controllers/LoginController");
+const loginMiddleware = require("../controllers/middlewares/LoginMiddleware");
 
-// router.get("/tasks", getAll);
-// router.post("/tasks", validadeBody, createTask);
-// router.delete("/tasks/:id", deleteTask);
-// router.put("/tasks/:id", updateTask);
+router.post("/user", loginMiddleware.validadeBody, loginController.createUser);
 
-export default router;
+module.exports = router;
