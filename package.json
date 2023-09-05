@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "dependencies": {
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
@@ -6,5 +7,14 @@
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
-  }
+  },
+  "scripts": {
+    "dev": "nodemon ./src/server.js"
+  },
+  "name": "academia-api",
+  "version": "1.0.0",
+  "main": "./src/server.js",
+  "repository": "https://github.com/3D-Fuzion/academia-api.git",
+  "author": "Guilherme Vianna <mataveli91@gmail.com>",
+  "license": "MIT"
 }
