@@ -21,16 +21,22 @@ const createUser = async (request, response) => {
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
   });
 
+  const query =
+    "INSERT INTO user(name, cpf, email, password, birthdate, academycode, registerstatus) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
   const body = request.body;
-
-  const query = "INSERT INTO user(cpf,email,password) VALUES (?, ?, ?)";
-
   const [rows] = await connection.execute(query, [
+    body.name,
     body.cpf,
     body.email,
     body.password,
+    body.birthdate,
+    body.academycode,
+    "waiting",
   ]);
 
   console.log(rows.affectedRows);

@@ -6,6 +6,8 @@ const validadeCreateUserBody = async (req, res, next) => {
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
   });
 
   const { body } = req;
@@ -16,6 +18,12 @@ const validadeCreateUserBody = async (req, res, next) => {
 
   if (body.cpf.length != 11) {
     return res.status(400).json({ message: "CPF format is incorrect" });
+  }
+
+  if (body.academyCode.length != 8) {
+    return res
+      .status(400)
+      .json({ message: "ACADEMY_CODE format is incorrect" });
   }
 
   if (body.password.length < 8) {
@@ -34,10 +42,8 @@ const validadeCreateUserBody = async (req, res, next) => {
   }
 
   connection.end();
-
   next();
 };
-
 const validadeCredentialsBody = async (req, res, next) => {
   const { email, password } = req.body;
 
