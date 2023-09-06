@@ -20,7 +20,7 @@ const validadeCreateUserBody = async (req, res, next) => {
     return res.status(400).json({ message: "CPF format is incorrect" });
   }
 
-  if (body.academyCode.length != 8) {
+  if (body.academycode.length != 8) {
     return res
       .status(400)
       .json({ message: "ACADEMY_CODE format is incorrect" });
