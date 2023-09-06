@@ -1,22 +1,42 @@
+const { json } = require("express");
+const jwt = require("jsonwebtoken");
 const mysql = require("mysql2/promise");
 
+const generateToken = async (req, res) => {
+  const { email } = req.body;
+
+  const jwtToken = jwt.sign(
+    { userEmail: email },
+    process.env.JWT_TOKEN_SECRET,
+    {
+      expiresIn: 3600,
+    }
+  );
+  res.status(200).json({ token: jwtToken });
+};
+
 const createUser = async (request, response) => {
-  const connection = mysql.createPool({
-    host: "localhost",
-    user: "academia-api",
-    password: "6414",
-    database: "academia-dev",
-    port: "3306",
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
   });
 
+  const query =
+    "INSERT INTO user(name, cpf, email, password, birthdate, academycode, registerstatus) VALUES (?, ?, ?, ?, ?, ?, ?)";
+
   const body = request.body;
-
-  const query = "INSERT INTO user(cpf,email,password) VALUES (?, ?, ?)";
-
   const [rows] = await connection.execute(query, [
+    body.name,
     body.cpf,
     body.email,
     body.password,
+    body.birthdate,
+    body.academycode,
+    "waiting",
   ]);
 
   console.log(rows.affectedRows);
@@ -26,4 +46,5 @@ const createUser = async (request, response) => {
 
 module.exports = {
   createUser,
+  generateToken,
 };
