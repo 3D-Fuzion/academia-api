@@ -7,29 +7,29 @@ const validadeCreateUserBody = async (req, res, next) => {
     password: process.env.DATABASE_PASSWORD,
     port: process.env.DATABASE_PORT,
     database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
+    connectionLimit: 2,
   });
 
   const { body } = req;
+
+  console.log(body);
 
   if (isNaN(body.cpf)) {
     return res.status(400).json({ message: "CPF must be only numbers" });
   }
 
   if (body.cpf.length != 11) {
-    return res.status(400).json({ message: "CPF format is incorrect" });
+    return res.status(400).json({ errorCode: "2", message: "CPF format is incorrect" });
   }
 
   if (body.academycode.length != 8) {
-    return res
-      .status(400)
-      .json({ message: "ACADEMY_CODE format is incorrect" });
+    return res.status(400).json({ message: "ACADEMY_CODE format is incorrect" });
   }
 
   if (body.password.length < 8) {
     return res
       .status(400)
-      .json({ message: "PASSWORD lenght is less than 8 characters" });
+      .json({ errorCode: "3", message: "PASSWORD lenght is less than 8 characters" });
   }
 
   const [rows] = await connection.query(
@@ -37,10 +37,18 @@ const validadeCreateUserBody = async (req, res, next) => {
     body.email
   );
 
-  if (rows.length != 0) {
-    return res.status(400).json({ message: "EMAIL is already registered" });
+  if (rows.length > 0) {
+    return res.status(400).json({ errorCode: "1", message: "EMAIL is already registered" });
   }
 
+  const [academys] = await connection.query(
+    "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `academy` WHERE `code` = ?",
+    body.academycode
+  );
+
+  if (academys.length < 1) {
+    return res.status(400).json({ errorCode: "4", message: "Academy is not found" }).end();
+  }
   connection.end();
   next();
 };
@@ -48,19 +56,19 @@ const validadeCredentialsBody = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (email === undefined) {
-    res.status(400).json({ message: "EMAIL is required" });
+    return res.status(400).json({ message: "EMAIL is required" });
   }
 
   if (email === "") {
-    res.status(400).json({ message: "EMAIL cannot by empty" });
+    return res.status(400).json({ message: "EMAIL cannot by empty" });
   }
 
   if (password === undefined) {
-    res.status(400).json({ message: "PASSWORD is required" });
+    return res.status(400).json({ message: "PASSWORD is required" });
   }
 
   if (password === "") {
-    res.status(400).json({ message: "PASSWORD cannot by empty" });
+    return res.status(400).json({ message: "PASSWORD cannot by empty" });
   }
 
   let connection = mysql.createPool({
@@ -72,28 +80,57 @@ const validadeCredentialsBody = async (req, res, next) => {
   });
 
   const [queryResult] = await connection.query(
-    "SELECT email, password FROM `user` WHERE email= ?",
+    "SELECT email, password, registerStatus FROM `user` WHERE email= ?",
     [email]
   );
 
   if (queryResult[0] === undefined) {
-    res.status(404).json({ message: "No entry with this email is detected" });
+    return res.status(404).json({ message: "No entry with this email is detected" });
+  }
+  if (queryResult[0].registerStatus === "waiting") {
+    return res.status(403).json({ errorCode: "5", message: "User is not accepted" });
   }
 
   if (queryResult[0].password != password) {
-    res.status(400).json({ message: "Password is incorrect" });
+    return res.status(400).json({ message: "Password is incorrect" });
   }
 
   next();
 };
+
+const validadeChangePwdBody = async (req, res, next) => {
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const body = req.body
+  if (body.newpassword.length < 8) {
+    return res.status(400).json({ errorCode: "3", message: "PASSWORD lenght is less than 8 characters" });
+  }
+  const [rows] = await connection.execute("SELECT SQL_SMALL_RESULT SQL_NO_CACHE * FROM `user` WHERE email = ?", [body.email]);
+  if (rows[0] === undefined) {
+    return res.status(404).json({ message: "User with this email is not founded" });
+  }
+  console.log(rows[0])
+  if (rows[0].cpf != body.cpf) {
+    return res.status(400).json({ errorCode: "6", message: "Cpf is incorrect" });
+  }
+  next();
+ }
+
 const verifyToken = async (req, res, next) => {
   const token = req.headers["auth-token"];
   if (token === undefined) {
-    res.status(401).json({ message: "Please send token in auth-token" });
+    return res.status(401).json({ message: "Please send token in auth-token" });
   }
   jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err, decoded) => {
     if (err) {
-      res.status(401).end();
+      return res.status(401).end();
     }
     next();
   });
@@ -102,4 +139,5 @@ module.exports = {
   verifyToken,
   validadeCreateUserBody,
   validadeCredentialsBody,
+  validadeChangePwdBody
 };
