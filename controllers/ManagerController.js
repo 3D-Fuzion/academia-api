@@ -1,4 +1,3 @@
-const { json } = require("express");
 const mysql = require("mysql2/promise");
 
 async function acceptSolicitaction(req, res) {
@@ -30,8 +29,6 @@ async function checkSolicitations(req, res) {
     database: process.env.DATABASE_NAME,
     connectionLimit: 1,
   });
-
-  const body = req.body;
 
   const [queryResult] = await connection.query(
     "SELECT * FROM `user` WHERE registerStatus = 'waiting'"
