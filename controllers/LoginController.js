@@ -34,14 +34,13 @@ const createUser = async (request, response) => {
     body.cpf,
     body.email,
     body.password,
-    body.birthdate,
+    body.birthdate.substr(0, 10),
     body.academycode,
     "waiting",
   ]);
 
-  console.log(rows.affectedRows);
   connection.end();
-  return response.status(201).json();
+  response.status(201).json();
 };
 
 module.exports = {

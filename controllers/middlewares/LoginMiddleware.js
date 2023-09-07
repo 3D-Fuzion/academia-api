@@ -12,22 +12,22 @@ const validadeCreateUserBody = async (req, res, next) => {
 
   const { body } = req;
 
+  console.log(body);
+
   if (isNaN(body.cpf)) {
-    return res.status(400).json({ message: "CPF must be only numbers" });
+    res.status(400).json({ message: "CPF must be only numbers" });
   }
 
   if (body.cpf.length != 11) {
-    return res.status(400).json({ message: "CPF format is incorrect" });
+    res.status(400).json({ message: "CPF format is incorrect" });
   }
 
   if (body.academycode.length != 8) {
-    return res
-      .status(400)
-      .json({ message: "ACADEMY_CODE format is incorrect" });
+    res.status(400).json({ message: "ACADEMY_CODE format is incorrect" });
   }
 
   if (body.password.length < 8) {
-    return res
+    res
       .status(400)
       .json({ message: "PASSWORD lenght is less than 8 characters" });
   }
@@ -36,10 +36,6 @@ const validadeCreateUserBody = async (req, res, next) => {
     "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `user` WHERE `email` = ?",
     body.email
   );
-
-  if (rows.length != 0) {
-    return res.status(400).json({ message: "EMAIL is already registered" });
-  }
 
   connection.end();
   next();
