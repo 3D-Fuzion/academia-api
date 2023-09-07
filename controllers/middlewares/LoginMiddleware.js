@@ -37,8 +37,8 @@ const validadeCreateUserBody = async (req, res, next) => {
     body.email
   );
 
-  if(rows.length > 0) { 
-    return res.status(400).json({errorCode: "1", message: "EMAIL is already registered"});
+  if (rows.length > 0) {
+    return res.status(400).json({ errorCode: "1", message: "EMAIL is already registered" });
   }
 
   const [academys] = await connection.query(
@@ -46,8 +46,8 @@ const validadeCreateUserBody = async (req, res, next) => {
     body.academycode
   );
 
-  if(academys.length < 1) { 
-    return res.status(400).json({errorCode: "4", message: "Academy is not found"}).end();
+  if (academys.length < 1) {
+    return res.status(400).json({ errorCode: "4", message: "Academy is not found" }).end();
   }
   connection.end();
   next();
@@ -87,7 +87,7 @@ const validadeCredentialsBody = async (req, res, next) => {
   if (queryResult[0] === undefined) {
     return res.status(404).json({ message: "No entry with this email is detected" });
   }
-   if(queryResult[0].registerStatus === "waiting"){ 
+  if (queryResult[0].registerStatus === "waiting") {
     return res.status(403).json({ errorCode: "5", message: "User is not accepted" });
   }
 
@@ -97,6 +97,32 @@ const validadeCredentialsBody = async (req, res, next) => {
 
   next();
 };
+
+const validadeChangePwdBody = async (req, res, next) => {
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const body = req.body
+  if (body.newpassword.length < 8) {
+    return res.status(400).json({ errorCode: "3", message: "PASSWORD lenght is less than 8 characters" });
+  }
+  const [rows] = await connection.execute("SELECT SQL_SMALL_RESULT SQL_NO_CACHE * FROM `user` WHERE email = ?", [body.email]);
+  if (rows[0] === undefined) {
+    return res.status(404).json({ message: "User with this email is not founded" });
+  }
+  console.log(rows[0])
+  if (rows[0].cpf != body.cpf) {
+    return res.status(400).json({ errorCode: "6", message: "Cpf is incorrect" });
+  }
+  next();
+ }
+
 const verifyToken = async (req, res, next) => {
   const token = req.headers["auth-token"];
   if (token === undefined) {
@@ -113,4 +139,5 @@ module.exports = {
   verifyToken,
   validadeCreateUserBody,
   validadeCredentialsBody,
+  validadeChangePwdBody
 };

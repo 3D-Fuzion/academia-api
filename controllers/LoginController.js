@@ -43,7 +43,29 @@ const createUser = async (request, response) => {
   response.status(201).json();
 };
 
+const changePassword = async (request, response) => {
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const body = request.body;
+  const [rows] = await connection.query("UPDATE `user` SET password = ? WHERE cpf = ? LIMIT 1", [body.newpassword, body.cpf]);
+  console.log(rows.affectedRows)
+  connection.end();
+
+  if (rows.affectedRows === 0) {
+    return response.status(500).json({ message: "internal server error" })
+  }
+  return response.status(200).json();
+}
+
 module.exports = {
   createUser,
   generateToken,
+  changePassword
 };

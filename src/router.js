@@ -14,6 +14,11 @@ router.post(
   loginMiddleware.validadeCredentialsBody,
   loginController.generateToken
 );
+router.patch(
+  "/login/changepwd",
+  loginMiddleware.validadeChangePwdBody,
+  loginController.changePassword
+)
 router.put("/manager/solicitation", managerController.acceptSolicitaction);
 router.get("/manager/solicitation", managerController.checkSolicitations);
 
