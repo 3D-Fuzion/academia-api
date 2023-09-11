@@ -32,16 +32,22 @@ async function CreateTables() {
   });
 
   console.log("Inserting Tables...");
+
   response = await connection.query(
     "CREATE TABLE `user` (id int AUTO_INCREMENT PRIMARY KEY, name varchar(64) NOT NULL, email varchar(64) NOT NULL, cpf char(11) NOT NULL, password varchar(128) NOT NULL, birthdate date NOT NULL, academyCode int(8) NOT NULL,registerStatus enum('waiting', 'accepted') NOT NULL)"
   );
-
   console.log("Users table added");
+
   response = await connection.query(
     "CREATE TABLE `academy` (id int AUTO_INCREMENT PRIMARY KEY, name varchar(64) NOT NULL, code int NOT NULL)"
   );
   console.log("Academy tables added");
-  console.log(response);
+
+  response = await connection.query(
+    "INSERT INTO `academy` (name, code) VALUES ('DefaultAcademy', '88888888')"
+  );
+  console.log("Academy data insert");
+  
   connection.end();
 }
 
