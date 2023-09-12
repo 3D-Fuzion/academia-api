@@ -2,12 +2,13 @@ const mysql = require("mysql2/promise");
 require("dotenv").config();
 
 async function CreateDB() {
-  const connection = mysql.createPool({
+  let connection = mysql.createPool({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
     password: process.env.DATABASE_PASSWORD,
     port: process.env.DATABASE_PORT,
-    connectionLimit: 1,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 2,
   });
   console.log("Creating database...");
   let response;
@@ -23,12 +24,13 @@ async function CreateDB() {
 }
 
 async function CreateTables() {
-  const connection = mysql.createPool({
+  let connection = mysql.createPool({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
-    database: process.env.DATABASE_NAME,
     password: process.env.DATABASE_PASSWORD,
     port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 2,
   });
 
   console.log("Inserting Tables...");
@@ -47,7 +49,7 @@ async function CreateTables() {
     "INSERT INTO `academy` (name, code) VALUES ('DefaultAcademy', '88888888')"
   );
   console.log("Academy data insert");
-  
+
   connection.end();
 }
 
