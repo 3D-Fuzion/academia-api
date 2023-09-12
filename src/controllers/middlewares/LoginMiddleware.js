@@ -1,5 +1,7 @@
 const mysql = require("mysql2/promise");
 const jwt = require("jsonwebtoken");
+require("dotenv").config();
+
 const validadeCreateUserBody = async (req, res, next) => {
   let connection = mysql.createPool({
     host: process.env.DATABASE_HOST,
@@ -12,24 +14,51 @@ const validadeCreateUserBody = async (req, res, next) => {
 
   const { body } = req;
 
-  console.log(body);
+  if (!body.email) {
+    return res.status(400).json({ message: "EMAIL is required" });
+  }
+
+  if (!body.cpf) {
+    return res.status(400).json({ message: "CPF is required" });
+  }
+
+  if (!body.password) {
+    return res.status(400).json({ message: "PASSWORD is required" });
+  }
+
+  if (!body.name) {
+    return res.status(400).json({ message: "NAME is required" });
+  }
+
+  if (!body.academycode) {
+    return res.status(400).json({ message: "ACADEMY_CODE is required" });
+  }
+
+  if (!body.birthdate) {
+    return res.status(400).json({ message: "BIRTHDATE is required" });
+  }
 
   if (isNaN(body.cpf)) {
     return res.status(400).json({ message: "CPF must be only numbers" });
   }
 
   if (body.cpf.length != 11) {
-    return res.status(400).json({ errorCode: "2", message: "CPF format is incorrect" });
+    return res
+      .status(400)
+      .json({ errorCode: "2", message: "CPF format is incorrect" });
   }
 
   if (body.academycode.length != 8) {
-    return res.status(400).json({ message: "ACADEMY_CODE format is incorrect" });
+    return res
+      .status(400)
+      .json({ message: "ACADEMY_CODE format is incorrect" });
   }
 
   if (body.password.length < 8) {
-    return res
-      .status(400)
-      .json({ errorCode: "3", message: "PASSWORD lenght is less than 8 characters" });
+    return res.status(400).json({
+      errorCode: "3",
+      message: "PASSWORD lenght is less than 8 characters",
+    });
   }
 
   const [rows] = await connection.query(
@@ -38,7 +67,10 @@ const validadeCreateUserBody = async (req, res, next) => {
   );
 
   if (rows.length > 0) {
-    return res.status(400).json({ errorCode: "1", message: "EMAIL is already registered" });
+    return res
+      .status(400)
+      .json({ errorCode: "1", message: "EMAIL is already registered" })
+      .end();
   }
 
   const [academys] = await connection.query(
@@ -47,7 +79,10 @@ const validadeCreateUserBody = async (req, res, next) => {
   );
 
   if (academys.length < 1) {
-    return res.status(400).json({ errorCode: "4", message: "Academy is not found" }).end();
+    return res
+      .status(400)
+      .json({ errorCode: "4", message: "Academy is not found" })
+      .end();
   }
   connection.end();
   next();
@@ -85,10 +120,14 @@ const validadeCredentialsBody = async (req, res, next) => {
   );
 
   if (queryResult[0] === undefined) {
-    return res.status(404).json({ message: "No entry with this email is detected" });
+    return res
+      .status(404)
+      .json({ message: "No entry with this email is detected" });
   }
   if (queryResult[0].registerStatus === "waiting") {
-    return res.status(403).json({ errorCode: "5", message: "User is not accepted" });
+    return res
+      .status(403)
+      .json({ errorCode: "5", message: "User is not accepted" });
   }
 
   if (queryResult[0].password != password) {
@@ -108,20 +147,30 @@ const validadeChangePwdBody = async (req, res, next) => {
     connectionLimit: 1,
   });
 
-  const body = req.body
+  const body = req.body;
   if (body.newpassword.length < 8) {
-    return res.status(400).json({ errorCode: "3", message: "PASSWORD lenght is less than 8 characters" });
+    return res.status(400).json({
+      errorCode: "3",
+      message: "PASSWORD lenght is less than 8 characters",
+    });
   }
-  const [rows] = await connection.execute("SELECT SQL_SMALL_RESULT SQL_NO_CACHE * FROM `user` WHERE email = ?", [body.email]);
+  const [rows] = await connection.execute(
+    "SELECT SQL_SMALL_RESULT SQL_NO_CACHE * FROM `user` WHERE email = ?",
+    [body.email]
+  );
   if (rows[0] === undefined) {
-    return res.status(404).json({ message: "User with this email is not founded" });
+    return res
+      .status(404)
+      .json({ message: "User with this email is not founded" });
   }
-  console.log(rows[0])
+  console.log(rows[0]);
   if (rows[0].cpf != body.cpf) {
-    return res.status(400).json({ errorCode: "6", message: "Cpf is incorrect" });
+    return res
+      .status(400)
+      .json({ errorCode: "6", message: "Cpf is incorrect" });
   }
   next();
- }
+};
 
 const verifyToken = async (req, res, next) => {
   const token = req.headers["auth-token"];
@@ -139,5 +188,5 @@ module.exports = {
   verifyToken,
   validadeCreateUserBody,
   validadeCredentialsBody,
-  validadeChangePwdBody
+  validadeChangePwdBody,
 };

@@ -1,4 +1,5 @@
 const mysql = require("mysql2/promise");
+require("dotenv").config();
 
 async function acceptSolicitaction(req, res) {
   let connection = mysql.createPool({
