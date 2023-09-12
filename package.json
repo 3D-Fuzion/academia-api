@@ -13,9 +13,9 @@
     "supertest": "^6.3.3"
   },
   "scripts": {
-    "test": "node ./infra/Migration.js && jest",
+    "test": "node ./src/infra/Migration.js && jest",
     "dev": "nodemon ./src/server.js",
-    "migration": "node ./infra/Migration.js"
+    "migration": "node ./src/infra/Migration.js"
   },
   "name": "academia-api",
   "version": "1.0.0",
