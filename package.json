@@ -13,7 +13,7 @@
     "supertest": "^6.3.3"
   },
   "scripts": {
-    "test": "node ./src/infra/Migration.js && jest",
+    "test": "jest",
     "dev": "nodemon ./src/server.js",
     "migration": "node ./src/infra/Migration.js"
   },
