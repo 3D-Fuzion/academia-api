@@ -50,6 +50,16 @@ async function CreateTables() {
   );
   console.log("Academy data insert");
 
+  response = await connection.query(
+    "CREATE TABLE `record` (id int AUTO_INCREMENT PRIMARY KEY, userId int NOT NULL, trainingId int NOT NULL, weight int NOT NULL)"
+  );
+  console.log("Record tables added");
+
+  response = await connection.query(
+    "CREATE TABLE `training` (id int AUTO_INCREMENT PRIMARY KEY, name varchar(64), category varchar(64))"
+  );
+  console.log("Academy tables added");
+
   connection.end();
 }
 
