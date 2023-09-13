@@ -43,12 +43,23 @@ async function CreateTables() {
   response = await connection.query(
     "CREATE TABLE `academy` (id int AUTO_INCREMENT PRIMARY KEY, name varchar(64) NOT NULL, code int NOT NULL)"
   );
-  console.log("Academy tables added");
+  console.log("Academy table added");
+
+  response = await connection.query(
+    "CREATE TABLE `exercice` (id int AUTO_INCREMENT PRIMARY KEY, name varchar(64) NOT NULL, trainingId int NOT NULL,userId int NOT NULL, weight int NOT NULL)"
+  );
+  console.log("Exercice table added");
+
+  response = await connection.query(
+    "CREATE TABLE `training` (id int AUTO_INCREMENT PRIMARY KEY, name varchar(64) NOT NULL)"
+  );
+  console.log("Training table added");
 
   response = await connection.query(
     "INSERT INTO `academy` (name, code) VALUES ('DefaultAcademy', '88888888')"
   );
   console.log("Academy data insert");
+
 
   connection.end();
 }
