@@ -57,7 +57,7 @@ async function getTrainings (req, res) {
   });
 
   const category = req.query.category
-
+  const userId = req.query.userid
 
   if(!category) { 
     const [trainings] = await connection.query("SELECT SQL_SMALL_RESULT * FROM `training`"); 
@@ -65,7 +65,12 @@ async function getTrainings (req, res) {
     res.status(200).json(trainings).end();
   } 
 
-  const [trainings] = await connection.query("SELECT SQL_SMALL_RESULT * FROM `training` WHERE category = ?", [
+  if(!userId) { 
+    res.status(404).json({message: "USERID is required"}).end();
+  }
+
+  const [trainings] = await connection.query("SELECT weight, id, name FROM training t LEFT JOIN ( SELECT r.userId, r.trainingId, r.weight FROM record r WHERE r.userid = ? ) r ON t.id = r.trainingId WHERE t.category = ?", [
+    userId,
     category
   ]); 
 
