@@ -58,8 +58,9 @@ router.post(
   profileController.setImage
 );
 
-router.put(
+router.patch(
   "/profile/sex", 
+  profileMiddleware.validadeSexBody, 
   profileController.changeSex
 );
 
