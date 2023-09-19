@@ -20,6 +20,7 @@ const changeSex = async (request, response) => {
     "UPDATE `user` SET sex = ? WHERE id = ? LIMIT 1";
 
   const body = request.body;
+
   const [rows] = await connection.execute(query, [
     body.sex,
     body.userid
@@ -28,9 +29,10 @@ const changeSex = async (request, response) => {
   connection.end();
 
   if(rows.affectedRows > 0) { 
-  	response.status(200).end();
+  	return response.status(200).end();
   }
-  response.status(500).json({message: "Server Error!"}	);
+  
+  return response.status(500).json({message:"Server Error!"});
 };
 
 const changeEffectPhrase = async (request, response) => {
@@ -48,14 +50,6 @@ const changeEffectPhrase = async (request, response) => {
 
   const body = request.body;
 
-  if(!body.userid) { 
-  	response.status(400).json({message: "USERID is required!"});
-  }
-
-  if(!body.effectphrase) { 
-  	response.status(400).json({message: "EFFECT_PHRASE is required!"});
-  }
-
   const [rows] = await connection.execute(query, [
     body.effectphrase,
     body.userid
@@ -64,9 +58,10 @@ const changeEffectPhrase = async (request, response) => {
   connection.end();
 
   if(rows.affectedRows > 0) { 
-  	response.status(200).end();
+  	return response.status(200).end();
   }
-  response.status(500).json({message: "Server Error!"});
+
+  return response.status(500).json({message: "Server Error!"});
 };
 
 const setImage = async (request, response) => {
@@ -125,8 +120,6 @@ const setImage = async (request, response) => {
   
   response.status(200).json({imageUrl: res.data.data.display_url}).end();
 };
-
-
 
 module.exports = {
   changeSex,
