@@ -5,6 +5,7 @@ const managerController = require("./controllers/ManagerController");
 const loginMiddleware = require("./controllers/middlewares/LoginMiddleware");
 const serverStatusController = require("./controllers/ServerStatusController");
 const recordController = require("./controllers/RecordController")
+const profileController = require("./controllers/ProfileController")
 
 router.post(
   "/user",
@@ -48,5 +49,21 @@ router.put(
   "/manager/solicitation", 
   managerController.acceptSolicitaction
 );
+
+router.post(
+  "/profile/image", 
+  profileController.setImage
+);
+
+router.put(
+  "/profile/sex", 
+  profileController.changeSex
+);
+
+router.patch(
+  "/profile/effectphrase", 
+  profileController.changeEffectPhrase
+);
+
 
 module.exports = router;
