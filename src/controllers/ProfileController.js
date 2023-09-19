@@ -48,14 +48,6 @@ const changeEffectPhrase = async (request, response) => {
 
   const body = request.body;
 
-  if(!body.userid) { 
-  	response.status(400).json({message: "USERID is required!"});
-  }
-
-  if(!body.effectphrase) { 
-  	response.status(400).json({message: "EFFECT_PHRASE is required!"});
-  }
-
   const [rows] = await connection.execute(query, [
     body.effectphrase,
     body.userid

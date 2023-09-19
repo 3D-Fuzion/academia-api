@@ -6,6 +6,8 @@ const loginMiddleware = require("./controllers/middlewares/LoginMiddleware");
 const serverStatusController = require("./controllers/ServerStatusController");
 const recordController = require("./controllers/RecordController")
 const profileController = require("./controllers/ProfileController")
+const profileMiddleware = require("./controllers/middlewares/ProfileMiddleware")
+
 
 router.post(
   "/user",
@@ -51,7 +53,8 @@ router.put(
 );
 
 router.post(
-  "/profile/image", 
+  "/profile/image",
+  profileMiddleware.validadeSetImageBody, 
   profileController.setImage
 );
 
