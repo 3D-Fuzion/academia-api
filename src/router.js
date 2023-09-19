@@ -66,6 +66,7 @@ router.patch(
 
 router.patch(
   "/profile/effectphrase", 
+  profileMiddleware.validadeEffectPhraseBody,
   profileController.changeEffectPhrase
 );
 
