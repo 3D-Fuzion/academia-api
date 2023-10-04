@@ -76,5 +76,12 @@ router.patch(
   profileController.changeName
 );
 
+router.patch(
+  "/profile/birthdate", 
+  profileMiddleware.validadeBirthDateBody,
+  profileController.changeBirthDate
+);
+
+
 
 module.exports = router;
