@@ -135,9 +135,38 @@ const changeName = async (request, response) => {
 
   const query =
     "UPDATE `user` SET name = ? WHERE id = ? LIMIT 1";
-    
+
   const [rows] = await connection.execute(query, [
     body.name,
+    body.userid
+  ]);
+
+  connection.end();
+
+  if(rows.affectedRows === 0) { 
+    return response.status(500).json({message: "Server Error!"}).end();
+  }
+  
+  return response.status(200).end();
+}
+
+const changeBirthDate = async (request, response) => { 
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const body = request.body;
+
+  const query =
+    "UPDATE `user` SET birthdate = ? WHERE id = ? LIMIT 1";
+
+  const [rows] = await connection.execute(query, [
+    body.birthdate,
     body.userid
   ]);
 
@@ -155,4 +184,5 @@ module.exports = {
   changeEffectPhrase,
   setImage,
   changeName,
+  changeBirthDate,
 };

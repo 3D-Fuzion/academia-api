@@ -138,9 +138,46 @@ const validadeNameBody = async (req, res, next) => {
   next(); 
 }
 
+const validadeBirthDateBody = async (req, res, next) => { 
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const body = req.body;
+  const regex = new RegExp("[0-9][0-9][0-9][0-9]-[0-1][0-9]-[0-3][0-9]"); 
+
+  if(!body.userid) { 
+    return res.status(400).json({message: "USERID is required!"});
+  } 
+
+  if(!body.birthdate) { 
+    return res.status(400).json({message: "BIRTH_DATE is required!"});
+  } else if (!regex.test(body.birthdate)) { 
+    return res.status(400).json({message: "BIRTH_DATE format is incorrect!"});
+  }
+
+  const query = "SELECT * from `user` WHERE id = ? LIMIT 1"
+
+  const [rows] = await connection.execute(query,[ 
+    body.userid
+  ]);
+
+  if(rows.length < 1) { 
+    return res.status(404).json({message: "User not found"});
+  }
+
+  next(); 
+}
+
 module.exports = {
     validadeSetImageBody,
     validadeSexBody,
     validadeEffectPhraseBody,
     validadeNameBody,
+    validadeBirthDateBody,
 }
