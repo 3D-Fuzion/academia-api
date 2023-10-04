@@ -70,5 +70,11 @@ router.patch(
   profileController.changeEffectPhrase
 );
 
+router.patch(
+  "/profile/name", 
+  profileMiddleware.validadeNameBody,
+  profileController.changeName
+);
+
 
 module.exports = router;
