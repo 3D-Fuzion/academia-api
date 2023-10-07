@@ -13,7 +13,13 @@ const generateToken = async (req, res) => {
       expiresIn: 3600,
     }
   );
-  res.status(200).json({ token: jwtToken });
+
+  res.status(200).json({
+    token: jwtToken,
+    id: res.locals.id,
+    email: res.locals.email,
+    cpf: res.locals.cpf,
+  });
 };
 
 const createUser = async (request, response) => {

@@ -115,7 +115,7 @@ const validadeCredentialsBody = async (req, res, next) => {
   });
 
   const [queryResult] = await connection.query(
-    "SELECT email, password, registerStatus FROM `user` WHERE email= ?",
+    "SELECT email, password, registerStatus, id, cpf FROM `user` WHERE email= ?",
     [email]
   );
 
@@ -133,6 +133,11 @@ const validadeCredentialsBody = async (req, res, next) => {
   if (queryResult[0].password != password) {
     return res.status(400).json({ message: "Password is incorrect" });
   }
+
+  res.locals.id = queryResult[0].id;
+  res.locals.email = queryResult[0].email;
+  res.locals.email = queryResult[0].email;
+  res.locals.cpf = queryResult[0].cpf;
 
   next();
 };
