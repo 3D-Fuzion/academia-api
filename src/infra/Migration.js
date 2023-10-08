@@ -79,6 +79,17 @@ async function CreateTables() {
   );
 
   console.log("Training table added");
+
+  response = await connection.query("CREATE TABLE `lesson` ("+
+    "id int AUTO_INCREMENT PRIMARY KEY,"+
+    "title varchar(64) NOT NULL,"+
+    "startTime date NOT NULL,"+
+    "endTime date NOT NULL,"+
+    "vacancy int NOT NULL,"+
+    "maxVacancy int NOT NULL"
+  );
+
+  console.log("Lesson table added");
   connection.end();
 }
 
