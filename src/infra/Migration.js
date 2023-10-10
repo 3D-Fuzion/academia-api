@@ -77,7 +77,6 @@ async function CreateTables() {
     "name varchar(64),"+
     "category varchar(64))"
   );
-
   console.log("Training table added");
 
   response = await connection.query("CREATE TABLE `lesson` ("+
@@ -86,7 +85,8 @@ async function CreateTables() {
     "startTime date NOT NULL,"+
     "endTime date NOT NULL,"+
     "vacancy int NOT NULL,"+
-    "maxVacancy int NOT NULL"
+    "maxVacancy int NOT NULL,"+
+    "professorName varchar(64) NOT NULL)"
   );
 
   console.log("Lesson table added");
