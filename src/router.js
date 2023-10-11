@@ -89,5 +89,10 @@ router.post(
   lessonController.createLesson
 )
 
+router.patch(
+  "/lesson/checkin",
+  lessonController.checkIn
+)
+
 
 module.exports = router;
