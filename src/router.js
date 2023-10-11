@@ -94,6 +94,11 @@ router.patch(
   lessonController.checkIn
 )
 
+router.get(
+  "/lesson",
+  lessonController.getLesson
+)
+
 router.delete(
   "/lesson/checkin",
   lessonController.cancelCheckIn

@@ -97,6 +97,22 @@ const cancelCheckIn = async (req, res) => {
   }
 }
 
+const getLesson = async (req, res) => {
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const body = req.body;
+
+  const [lesson] = await connection.query("SELECT * FROM `lesson`");
+
+  return res.status(200).json(lesson);
+}
 
 module.exports = {
   createLesson,
