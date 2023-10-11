@@ -84,7 +84,7 @@ async function CreateTables() {
     "title varchar(64) NOT NULL,"+
     "startTime datetime NOT NULL,"+
     "endTime datetime NOT NULL,"+
-    "vacancy int NOT NULL,"+
+    "vacancy int NOT NULL DEFAULT 0,"+
     "maxVacancy int NOT NULL,"+
     "professorName varchar(64) NOT NULL)"
   );
