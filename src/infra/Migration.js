@@ -90,6 +90,13 @@ async function CreateTables() {
   );
 
   console.log("Lesson table added");
+  
+  response = await connection.query("CREATE TABLE `lessoncheckin` ("+
+    "id int AUTO_INCREMENT PRIMARY KEY,"+
+    "userid int NOT NULL,"+
+    "lessonid int NOT NULL)"
+  );
+  
   connection.end();
 }
 
