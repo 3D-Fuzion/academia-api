@@ -7,7 +7,8 @@ const serverStatusController = require("./controllers/ServerStatusController");
 const recordController = require("./controllers/RecordController")
 const profileController = require("./controllers/ProfileController")
 const profileMiddleware = require("./controllers/middlewares/ProfileMiddleware")
-
+const lessonMiddleware = require("./controllers/middlewares/LessonMiddleware")
+const lessonController = require("./controllers/LessonController")
 
 router.post(
   "/user",
@@ -30,58 +31,63 @@ router.patch(
 router.get(
   "/training",
   recordController.getTrainings
-); 
+);
 
 router.put(
   "/training",
   recordController.setRecord
-); 
+);
 
 router.get(
-  "", 
+  "",
   serverStatusController.serverStatus
 );
 
 router.get(
-  "/manager/solicitation", 
+  "/manager/solicitation",
   managerController.checkSolicitations
 );
 
 router.put(
-  "/manager/solicitation", 
+  "/manager/solicitation",
   managerController.acceptSolicitaction
 );
 
 router.post(
   "/profile/image",
-  profileMiddleware.validadeSetImageBody, 
+  profileMiddleware.validadeSetImageBody,
   profileController.setImage
 );
 
 router.patch(
-  "/profile/sex", 
-  profileMiddleware.validadeSexBody, 
+  "/profile/sex",
+  profileMiddleware.validadeSexBody,
   profileController.changeSex
 );
 
 router.patch(
-  "/profile/effectphrase", 
+  "/profile/effectphrase",
   profileMiddleware.validadeEffectPhraseBody,
   profileController.changeEffectPhrase
 );
 
 router.patch(
-  "/profile/name", 
+  "/profile/name",
   profileMiddleware.validadeNameBody,
   profileController.changeName
 );
 
 router.patch(
-  "/profile/birthdate", 
+  "/profile/birthdate",
   profileMiddleware.validadeBirthDateBody,
   profileController.changeBirthDate
 );
 
+router.post(
+  "/lesson",
+  lessonMiddleware.validateCreateLessonBody,
+  lessonController.createLesson
+)
 
 
 module.exports = router;
