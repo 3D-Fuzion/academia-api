@@ -70,6 +70,33 @@ const checkIn = async (req, res) => {
   }
 }
 
+const cancelCheckIn = async (req, res) => {
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const body = req.body;
+
+  const [lesson] = await connection.query("SELECT * FROM `lesson` LIMIT 1");
+
+  const newVacancy = lesson[0].vacancy - 1;
+
+  const [checkIn] = await connection.query("UPDATE `lesson` SET vacancy = ? WHERE id = ?", [
+    newVacancy,
+    body.lessonid,
+  ]);
+
+  if (checkIn.affectedRows > 0) {
+    const [checkIn] = await connection.query("DELETE FROM `lessoncheckin` WHERE id = ? AND lessonid = ? LIMIT 1", [body.id, body.lessonid]);
+    return res.status(200).end();
+  }
+}
+
 
 module.exports = {
   createLesson,

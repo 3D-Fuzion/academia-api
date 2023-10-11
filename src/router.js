@@ -94,5 +94,9 @@ router.patch(
   lessonController.checkIn
 )
 
+router.delete(
+  "/lesson/checkin",
+  lessonController.cancelCheckIn
+)
 
 module.exports = router;
