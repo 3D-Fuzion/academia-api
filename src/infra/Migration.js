@@ -84,12 +84,19 @@ async function CreateTables() {
     "title varchar(64) NOT NULL,"+
     "startTime datetime NOT NULL,"+
     "endTime datetime NOT NULL,"+
-    "vacancy int NOT NULL,"+
+    "vacancy int NOT NULL DEFAULT 0,"+
     "maxVacancy int NOT NULL,"+
     "professorName varchar(64) NOT NULL)"
   );
 
   console.log("Lesson table added");
+  
+  response = await connection.query("CREATE TABLE `lessoncheckin` ("+
+    "id int AUTO_INCREMENT PRIMARY KEY,"+
+    "userid int NOT NULL,"+
+    "lessonid int NOT NULL)"
+  );
+  
   connection.end();
 }
 

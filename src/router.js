@@ -89,5 +89,19 @@ router.post(
   lessonController.createLesson
 )
 
+router.patch(
+  "/lesson/checkin",
+  lessonController.checkIn
+)
+
+router.get(
+  "/lesson",
+  lessonController.getLesson
+)
+
+router.delete(
+  "/lesson/checkin",
+  lessonController.cancelCheckIn
+)
 
 module.exports = router;
