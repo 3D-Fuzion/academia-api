@@ -90,6 +90,6 @@ router.post(
 
 router.get("/coach", coachController.getCoach);
 
-router.get("/training", trainingController.getCategories);
+router.get("/training/categories", trainingController.getCategories);
 
 module.exports = router;

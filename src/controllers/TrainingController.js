@@ -1,7 +1,9 @@
 const { json } = require("express");
 const mysql = require("mysql2/promise");
+require("dotenv").config();
+const jwt = require("jsonwebtoken");
 
-async function getCategories(req, res) {
+const getCategories = async (req, res) => {
   let connection = mysql.createPool({
     host: process.env.DATABASE_HOST,
     user: process.env.DATABASE_USER,
@@ -14,10 +16,8 @@ async function getCategories(req, res) {
   const [categories] = await connection.query(
     "SELECT category FROM `training` WHERE name IS NULL"
   );
-
-  connection.end();
-  return res.status(200).json(categories);
-}
+  res.send(categories);
+};
 module.exports = {
   getCategories,
 };
