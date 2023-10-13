@@ -57,6 +57,15 @@ async function CreateTables() {
 
   console.log("Academy table added");
 
+  response = await connection.query("CREATE TABLE `manager` ("+
+    "id int AUTO_INCREMENT PRIMARY KEY,"+
+    "name varchar(64) NOT NULL,"+ 
+    "email varchar(64) NOT NULL,"+
+    "password varchar(128) NOT NULL)" 
+  );
+
+  console.log("Manager table added");
+
   response = await connection.query("INSERT INTO `academy`"+ 
     "(name, code)"+ 
     "VALUES"+
