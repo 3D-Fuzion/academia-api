@@ -4,11 +4,12 @@ const loginController = require("./controllers/LoginController");
 const managerController = require("./controllers/ManagerController");
 const loginMiddleware = require("./controllers/middlewares/LoginMiddleware");
 const serverStatusController = require("./controllers/ServerStatusController");
-const recordController = require("./controllers/RecordController")
-const profileController = require("./controllers/ProfileController")
-const profileMiddleware = require("./controllers/middlewares/ProfileMiddleware")
-const lessonMiddleware = require("./controllers/middlewares/LessonMiddleware")
-const lessonController = require("./controllers/LessonController")
+const recordController = require("./controllers/RecordController");
+const profileController = require("./controllers/ProfileController");
+const profileMiddleware = require("./controllers/middlewares/ProfileMiddleware");
+const lessonMiddleware = require("./controllers/middlewares/LessonMiddleware");
+const lessonController = require("./controllers/LessonController");
+const coachController = require("./controllers/CoachController");
 
 router.post(
   "/user",
@@ -28,30 +29,15 @@ router.patch(
   loginController.changePassword
 );
 
-router.get(
-  "/training",
-  recordController.getTrainings
-);
+router.get("/training", recordController.getTrainings);
 
-router.put(
-  "/training",
-  recordController.setRecord
-);
+router.put("/training", recordController.setRecord);
 
-router.get(
-  "",
-  serverStatusController.serverStatus
-);
+router.get("", serverStatusController.serverStatus);
 
-router.get(
-  "/manager/solicitation",
-  managerController.checkSolicitations
-);
+router.get("/manager/solicitation", managerController.checkSolicitations);
 
-router.put(
-  "/manager/solicitation",
-  managerController.acceptSolicitaction
-);
+router.put("/manager/solicitation", managerController.acceptSolicitaction);
 
 router.post(
   "/profile/image",
@@ -87,26 +73,20 @@ router.post(
   "/lesson",
   lessonMiddleware.validateCreateLessonBody,
   lessonController.createLesson
-)
+);
 
-router.patch(
-  "/lesson/checkin",
-  lessonController.checkIn
-)
+router.patch("/lesson/checkin", lessonController.checkIn);
 
-router.get(
-  "/lesson",
-  lessonController.getLesson
-)
+router.get("/lesson", lessonController.getLesson);
 
-router.delete(
-  "/lesson/checkin",
-  lessonController.cancelCheckIn
-)
+router.delete("/lesson/checkin", lessonController.cancelCheckIn);
 
 router.post(
-  "/manager/login", 
+  "/manager/login",
   managerController.logIn,
   loginController.generateToken
-)
+);
+
+router.get("/coach", coachController.getCoach);
+
 module.exports = router;
