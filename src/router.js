@@ -104,4 +104,9 @@ router.delete(
   lessonController.cancelCheckIn
 )
 
+router.post(
+  "/manager/login", 
+  managerController.logIn,
+  loginController.generateToken
+)
 module.exports = router;
