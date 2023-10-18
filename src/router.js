@@ -76,7 +76,11 @@ router.post(
   lessonController.createLesson
 );
 
-router.patch("/lesson/checkin", lessonController.checkIn);
+router.patch(
+  "/lesson/checkin",
+  lessonMiddleware.validadeCheckInLessonBody,
+  lessonController.checkIn
+);
 
 router.get("/lesson", lessonController.getLesson);
 
