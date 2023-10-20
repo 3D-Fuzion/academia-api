@@ -48,7 +48,7 @@ const checkIn = async (req, res) => {
     "SELECT * FROM `lesson` WHERE id = ? LIMIT 1",
     [body.lessonid]
   );
- 
+
   if (lesson[0].vacancy < lesson[0].maxVacancy) {
     const newVacancy = lesson[0].vacancy + 1;
 
@@ -121,9 +121,17 @@ const getLesson = async (req, res) => {
     connectionLimit: 1,
   });
 
-  const body = req.body;
+  const params = req.query;
 
-  const [lesson] = await connection.query("SELECT * FROM `lesson`");
+  var lesson;
+  if (!params.date) {
+    [lesson] = await connection.query("SELECT * FROM `lesson`");
+  } else {
+    [lesson] = await connection.query(
+      "SELECT * FROM `lesson` WHERE startTime LIKE ?",
+      [params.date + "%"]
+    );
+  }
 
   return res.status(200).json(lesson);
 };
