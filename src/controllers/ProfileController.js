@@ -1,5 +1,3 @@
-const { json } = require("express");
-const jwt = require("jsonwebtoken");
 const mysql = require("mysql2/promise");
 const axios = require("axios");
 const FormData = require("form-data");
