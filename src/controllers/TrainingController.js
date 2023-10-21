@@ -1,4 +1,3 @@
-const { json } = require("express");
 const mysql = require("mysql2/promise");
 require("dotenv").config();
 const jwt = require("jsonwebtoken");

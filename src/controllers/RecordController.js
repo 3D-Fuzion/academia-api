@@ -1,4 +1,3 @@
-const { json } = require("express");
 const mysql = require("mysql2/promise");
 
 async function setRecord(req, res) {
