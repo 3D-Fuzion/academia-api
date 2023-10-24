@@ -81,7 +81,13 @@ router.patch(
 
 router.get("/lesson", lessonController.getLesson);
 router.get(
-  "/lesson/student",
+  "/lesson/:id",
+  lessonMiddleware.validadeGetLessonById,
+  lessonController.getLessonById
+);
+
+router.get(
+  "/lesson/:id/student",
   lessonMiddleware.validadeGetStudentsInLesson,
   lessonController.getStudentInLesson
 );

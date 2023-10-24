@@ -79,7 +79,17 @@ const validadeGetStudentsInLesson = async (req, res, next) => {
     connectionLimit: 1,
   });
 
-  const params = req.query;
+  const params = req.params;
+
+  if (!params.id) {
+    return res.status(400).json({ message: "id is required" });
+  }
+
+  next();
+};
+
+const validadeGetLessonById = async (req, res, next) => {
+  const params = req.params;
 
   if (!params.id) {
     return res.status(400).json({ message: "id is required" });
@@ -92,4 +102,5 @@ module.exports = {
   validateCreateLessonBody,
   validadeCheckInLessonBody,
   validadeGetStudentsInLesson,
+  validadeGetLessonById,
 };

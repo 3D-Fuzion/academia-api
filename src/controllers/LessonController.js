@@ -134,6 +134,30 @@ const getLesson = async (req, res) => {
   return res.status(200).json(lesson);
 };
 
+const getLessonById = async (req, res) => {
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const params = req.params;
+
+  const [lesson] = await connection.query(
+    "SELECT * FROM `lesson` WHERE id = ?",
+    [params.id]
+  );
+
+  if (lesson.length != 0) {
+    res.status(200).json(lesson);
+  } else {
+    res.status(404).end();
+  }
+};
+
 const getStudentInLesson = async (req, res) => {
   let connection = mysql.createPool({
     host: process.env.DATABASE_HOST,
@@ -144,7 +168,7 @@ const getStudentInLesson = async (req, res) => {
     connectionLimit: 1,
   });
 
-  const params = req.query;
+  const params = req.params;
 
   const [user] = await connection.query(
     "SELECT name FROM user " +
@@ -166,4 +190,5 @@ module.exports = {
   cancelCheckIn,
   getLesson,
   getStudentInLesson,
+  getLessonById,
 };
