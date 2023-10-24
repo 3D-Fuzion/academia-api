@@ -80,6 +80,11 @@ router.patch(
 );
 
 router.get("/lesson", lessonController.getLesson);
+router.get(
+  "/lesson/student",
+  lessonMiddleware.validadeGetStudentsInLesson,
+  lessonController.getStudentInLesson
+);
 
 router.delete("/lesson/checkin", lessonController.cancelCheckIn);
 
