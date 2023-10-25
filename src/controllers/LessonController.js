@@ -95,18 +95,18 @@ const cancelCheckIn = async (req, res) => {
 
   const newVacancy = lesson[0].vacancy - 1;
 
-  const [checkIn] = await connection.query(
-    "UPDATE `lesson` SET vacancy = ? WHERE id = ?",
-    [newVacancy, body.lessonid]
-  );
+  await connection.query("UPDATE `lesson` SET vacancy = ? WHERE id = ?", [
+    newVacancy,
+    body.lessonid,
+  ]);
 
-  if (checkIn.affectedRows > 0) {
-    const [checkIn] = await connection.query(
-      "DELETE FROM `lessoncheckin` WHERE id = ? AND lessonid = ? LIMIT 1",
-      [body.id, body.lessonid]
-    );
-    return res.status(200).end();
-  }
+  await connection.query(
+    "DELETE FROM `lessoncheckin` WHERE userid = ? AND lessonid = ? LIMIT 1",
+    [body.id, body.lessonid]
+  );
+  console.log("User " + body.id + " checkin canceled");
+
+  res.status(200).end();
 };
 
 const getLesson = async (req, res) => {
@@ -171,7 +171,7 @@ const getStudentInLesson = async (req, res) => {
   const params = req.params;
 
   const [user] = await connection.query(
-    "SELECT name FROM user " +
+    "SELECT name,id FROM user " +
       "WHERE user.id IN" +
       "(SELECT userid FROM lessoncheckin WHERE lessoncheckin.lessonid = ?)",
     [params.id]
