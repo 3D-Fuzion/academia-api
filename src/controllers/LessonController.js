@@ -95,18 +95,18 @@ const cancelCheckIn = async (req, res) => {
 
   const newVacancy = lesson[0].vacancy - 1;
 
-  const [checkIn] = await connection.query(
-    "UPDATE `lesson` SET vacancy = ? WHERE id = ?",
-    [newVacancy, body.lessonid]
-  );
+  await connection.query("UPDATE `lesson` SET vacancy = ? WHERE id = ?", [
+    newVacancy,
+    body.lessonid,
+  ]);
 
-  if (checkIn.affectedRows > 0) {
-    const [checkIn] = await connection.query(
-      "DELETE FROM `lessoncheckin` WHERE id = ? AND lessonid = ? LIMIT 1",
-      [body.id, body.lessonid]
-    );
-    return res.status(200).end();
-  }
+  await connection.query(
+    "DELETE FROM `lessoncheckin` WHERE userid = ? AND lessonid = ? LIMIT 1",
+    [body.id, body.lessonid]
+  );
+  console.log("User " + body.id + " checkin canceled");
+
+  res.status(200).end();
 };
 
 const getLesson = async (req, res) => {
@@ -134,6 +134,30 @@ const getLesson = async (req, res) => {
   return res.status(200).json(lesson);
 };
 
+const getLessonById = async (req, res) => {
+  let connection = mysql.createPool({
+    host: process.env.DATABASE_HOST,
+    user: process.env.DATABASE_USER,
+    password: process.env.DATABASE_PASSWORD,
+    port: process.env.DATABASE_PORT,
+    database: process.env.DATABASE_NAME,
+    connectionLimit: 1,
+  });
+
+  const params = req.params;
+
+  const [lesson] = await connection.query(
+    "SELECT * FROM `lesson` WHERE id = ?",
+    [params.id]
+  );
+
+  if (lesson.length != 0) {
+    res.status(200).json(lesson);
+  } else {
+    res.status(404).end();
+  }
+};
+
 const getStudentInLesson = async (req, res) => {
   let connection = mysql.createPool({
     host: process.env.DATABASE_HOST,
@@ -144,10 +168,10 @@ const getStudentInLesson = async (req, res) => {
     connectionLimit: 1,
   });
 
-  const params = req.query;
+  const params = req.params;
 
   const [user] = await connection.query(
-    "SELECT name FROM user " +
+    "SELECT name,id FROM user " +
       "WHERE user.id IN" +
       "(SELECT userid FROM lessoncheckin WHERE lessoncheckin.lessonid = ?)",
     [params.id]
@@ -166,4 +190,5 @@ module.exports = {
   cancelCheckIn,
   getLesson,
   getStudentInLesson,
+  getLessonById,
 };
