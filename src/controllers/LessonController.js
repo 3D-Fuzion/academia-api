@@ -1,19 +1,10 @@
-const mysql = require("mysql2/promise");
+const connection = require("../connection")
 require("dotenv").config();
 
 const createLesson = async (req, res) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const body = req.body;
 
-  const [newlesson] = await connection.query(
+  const [newlesson] = await connection.execute(
     "INSERT INTO `lesson` (title, professorName, startTime, endTime, maxVacancy, vacancy) VALUES (?,?,?,?,?,?)",
     [
       body.title,
@@ -33,18 +24,9 @@ const createLesson = async (req, res) => {
 };
 
 const checkIn = async (req, res) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const body = req.body;
 
-  const [lesson] = await connection.query(
+  const [lesson] = await connection.execute(
     "SELECT * FROM `lesson` WHERE id = ? LIMIT 1",
     [body.lessonid]
   );
