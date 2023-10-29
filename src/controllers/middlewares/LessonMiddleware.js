@@ -1,5 +1,4 @@
 const mysql = require("mysql2/promise");
-const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const validateCreateLessonBody = async (req, res, next) => {
