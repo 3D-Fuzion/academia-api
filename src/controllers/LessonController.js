@@ -64,15 +64,6 @@ const checkIn = async (req, res) => {
 };
 
 const cancelCheckIn = async (req, res) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const body = req.body;
 
   const [lesson] = await connection.query("SELECT * FROM `lesson` LIMIT 1");
@@ -94,15 +85,6 @@ const cancelCheckIn = async (req, res) => {
 };
 
 const getLesson = async (req, res) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const params = req.query;
 
   var lesson;
@@ -119,15 +101,6 @@ const getLesson = async (req, res) => {
 };
 
 const getLessonById = async (req, res) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const params = req.params;
 
   const [lesson] = await connection.query(
@@ -143,15 +116,6 @@ const getLessonById = async (req, res) => {
 };
 
 const getStudentInLesson = async (req, res) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const params = req.params;
 
   const [user] = await connection.query(
