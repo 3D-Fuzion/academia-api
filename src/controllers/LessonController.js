@@ -18,7 +18,7 @@ const createLesson = async (req, res) => {
 
   if (newlesson.affectedRows > 0) {
     res.status(201);
-  }else {
+  } else {
     res.status(500);
   }
 };
@@ -120,8 +120,8 @@ const getStudentInLesson = async (req, res) => {
 
   const [user] = await connection.query(
     "SELECT name,id FROM user " +
-      "WHERE user.id IN" +
-      "(SELECT userid FROM lessoncheckin WHERE lessoncheckin.lessonid = ?)",
+    "WHERE user.id IN" +
+    "(SELECT userid FROM lessoncheckin WHERE lessoncheckin.lessonid = ?)",
     [params.id]
   );
 
