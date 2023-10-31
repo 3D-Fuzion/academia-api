@@ -1,17 +1,8 @@
-const mysql = require("mysql2/promise");
+const connection = require("../../connection")
 const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const validadeCreateUserBody = async (req, res, next) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 2,
-  });
-
   const { body } = req;
 
   if (!body.email) {
@@ -61,7 +52,7 @@ const validadeCreateUserBody = async (req, res, next) => {
     });
   }
 
-  const [rows] = await connection.query(
+  const [rows] = await connection.execute(
     "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `user` WHERE `email` = ?",
     body.email
   );
@@ -73,7 +64,7 @@ const validadeCreateUserBody = async (req, res, next) => {
       .end();
   }
 
-  const [academys] = await connection.query(
+  const [academys] = await connection.execute(
     "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `academy` WHERE `code` = ?",
     body.academycode
   );
@@ -106,38 +97,30 @@ const validadeCredentialsBody = async (req, res, next) => {
     return res.status(400).json({ message: "PASSWORD cannot by empty" });
   }
 
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-  });
-
-  const [queryResult] = await connection.query(
+  const [executeResult] = await connection.execute(
     "SELECT email, password, registerStatus, id, cpf FROM `user` WHERE email= ?",
     [email]
   );
 
-  if (queryResult[0] === undefined) {
+  if (executeResult[0] === undefined) {
     return res
       .status(404)
       .json({ message: "No entry with this email is detected" });
   }
-  if (queryResult[0].registerStatus === "waiting") {
+  if (executeResult[0].registerStatus === "waiting") {
     return res
       .status(403)
       .json({ errorCode: "5", message: "User is not accepted" });
   }
 
-  if (queryResult[0].password != password) {
+  if (executeResult[0].password != password) {
     return res.status(400).json({ message: "Password is incorrect" });
   }
 
-  res.locals.id = queryResult[0].id;
-  res.locals.email = queryResult[0].email;
-  res.locals.email = queryResult[0].email;
-  res.locals.cpf = queryResult[0].cpf;
+  res.locals.id = executeResult[0].id;
+  res.locals.email = executeResult[0].email;
+  res.locals.email = executeResult[0].email;
+  res.locals.cpf = executeResult[0].cpf;
 
   next();
 };
