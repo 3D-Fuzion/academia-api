@@ -5,23 +5,23 @@ const validateCreateLessonBody = async (req, res, next) => {
   const { body } = req;
 
   if (!body.professorname) {
-    return res.status(400).json({ message: "professorname is required" });
+    res.status(400).json({ message: "professorname is required" });
   }
 
   if (!body.title) {
-    return res.status(400).json({ message: "title is required" });
+    res.status(400).json({ message: "title is required" });
   }
 
   if (!body.starttime) {
-    return res.status(400).json({ message: "starttime is required" });
+    res.status(400).json({ message: "starttime is required" });
   }
 
   if (!body.endtime) {
-    return res.status(400).json({ message: "endtime is required" });
+    res.status(400).json({ message: "endtime is required" });
   }
 
   if (!body.maxvacancy) {
-    return res.status(400).json({ message: "maxvacancy is required" });
+    res.status(400).json({ message: "maxvacancy is required" });
   }
 
   next();
@@ -40,11 +40,11 @@ const validadeCheckInLessonBody = async (req, res, next) => {
   const body = req.body;
 
   if (!body.lessonid) {
-    return res.status(400).json({ message: "lessonid is required" });
+    res.status(400).json({ message: "lessonid is required" });
   }
 
   if (!body.id) {
-    return res.status(400).json({ message: "id is required" });
+    res.status(400).json({ message: "id is required" });
   }
 
   const [user] = await connection.query(
@@ -58,11 +58,11 @@ const validadeCheckInLessonBody = async (req, res, next) => {
   );
 
   if (!user.length > 0) {
-    return res.status(404).json({ message: "user not founded" });
+    res.status(404).json({ message: "user not founded" });
   }
 
   if (!lesson.length > 0) {
-    return res.status(404).json({ message: "lesson not founded" });
+    res.status(404).json({ message: "lesson not founded" });
   }
 
   next();
@@ -81,7 +81,7 @@ const validadeGetStudentsInLesson = async (req, res, next) => {
   const params = req.params;
 
   if (!params.id) {
-    return res.status(400).json({ message: "id is required" });
+    res.status(400).json({ message: "id is required" });
   }
 
   next();
@@ -91,7 +91,7 @@ const validadeGetLessonById = async (req, res, next) => {
   const params = req.params;
 
   if (!params.id) {
-    return res.status(400).json({ message: "id is required" });
+    res.status(400).json({ message: "id is required" });
   }
 
   next();
