@@ -28,15 +28,6 @@ const validateCreateLessonBody = async (req, res, next) => {
 };
 
 const validadeCheckInLessonBody = async (req, res, next) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const body = req.body;
 
   if (!body.lessonid) {
@@ -47,12 +38,12 @@ const validadeCheckInLessonBody = async (req, res, next) => {
     res.status(400).json({ message: "id is required" });
   }
 
-  const [user] = await connection.query(
+  const [user] = await connection.execute(
     "SELECT * FROM `user` WHERE id = ? LIMIT 1",
     [body.id]
   );
 
-  const [lesson] = await connection.query(
+  const [lesson] = await connection.execute(
     "SELECT * FROM `lesson` WHERE id = ? LIMIT 1",
     [body.lessonid]
   );
