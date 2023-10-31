@@ -17,9 +17,9 @@ const createLesson = async (req, res) => {
   );
 
   if (newlesson.affectedRows > 0) {
-    res.status(201);
+    res.status(201).end();
   } else {
-    res.status(500);
+    res.status(500).end();
   }
 };
 
