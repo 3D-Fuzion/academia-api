@@ -41,7 +41,7 @@ const createUser = async (request, response) => {
 
 const changePassword = async (request, response) => {
   const body = request.body;
-  const [rows] = await connection.query(
+  const [rows] = await connection.execute(
     "UPDATE `user` SET password = ? WHERE cpf = ? LIMIT 1",
     [body.newpassword, body.cpf]
   );
