@@ -56,10 +56,10 @@ const checkIn = async (req, res) => {
         "INSERT INTO `lessoncheckin` (userid, lessonid) VALUES (?, ?)",
         [body.id, body.lessonid]
       );
-      return res.status(200).end();
+      res.status(200).end();
     }
   } else {
-    return res.status(409).json({ message: "lesson is full" }).end();
+    res.status(409).json({ message: "lesson is full" }).end();
   }
 };
 
@@ -79,6 +79,7 @@ const cancelCheckIn = async (req, res) => {
     "DELETE FROM `lessoncheckin` WHERE userid = ? AND lessonid = ? LIMIT 1",
     [body.id, body.lessonid]
   );
+  
   console.log("User " + body.id + " checkin canceled");
 
   res.status(200).end();
@@ -97,7 +98,7 @@ const getLesson = async (req, res) => {
     );
   }
 
-  return res.status(200).json(lesson);
+  res.status(200).json(lesson);
 };
 
 const getLessonById = async (req, res) => {
@@ -126,7 +127,7 @@ const getStudentInLesson = async (req, res) => {
   );
 
   if (user.length < 1) {
-    res.sendStatus(404);
+    res.status(404).end();
   } else {
     res.json(user);
   }
