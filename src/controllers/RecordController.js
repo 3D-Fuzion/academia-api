@@ -1,16 +1,7 @@
-const mysql = require("mysql2/promise");
+const connection = require("../connection")
 
 async function setRecord(req, res) {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
-  const body = req.body;
+  const { body } = req;
 
   const [rows] = await connection.query("SELECT id FROM `record` WHERE userId = ? AND trainingId = ? LIMIT 1",[
     body.userid, body.trainingid
@@ -41,31 +32,20 @@ async function setRecord(req, res) {
     }
   } 
 
-  connection.end();
   res.status(200).end();
 }
 
 async function getTrainings (req, res) { 
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const category = req.query.category
   const userId = req.query.userid
 
   if(!category) { 
     const [trainings] = await connection.query("SELECT SQL_SMALL_RESULT * FROM `training`"); 
-    connection.end();
-    res.status(200).json(trainings).end();
+    res.status(200).json(trainings);
   } 
 
   if(!userId) { 
-    res.status(404).json({message: "USERID is required"}).end();
+    res.status(404).json({message: "USERID is required"});
   }
 
   const [trainings] = await connection.query("SELECT weight, id, name FROM training t LEFT JOIN ( SELECT r.userId, r.trainingId, r.weight FROM record r WHERE r.userid = ? ) r ON t.id = r.trainingId WHERE t.category = ?", [
@@ -74,11 +54,10 @@ async function getTrainings (req, res) {
   ]); 
 
   if (trainings.length < 1) { 
-    res.status(404).json({message: "Not exist trainings with given category"}).end();  
+    res.status(404).json({message: "Not exist trainings with given category"});
   }
 
-  connection.end();
-  res.status(200).json(trainings).end();
+  res.status(200).json(trainings);
 }
 
 module.exports = {

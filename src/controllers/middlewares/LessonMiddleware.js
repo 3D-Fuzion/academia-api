@@ -1,4 +1,4 @@
-const mysql = require("mysql2/promise");
+const connection = require("../../connection")
 require("dotenv").config();
 
 const validateCreateLessonBody = async (req, res, next) => {

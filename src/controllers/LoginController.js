@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const mysql = require("mysql2/promise");
+const connection = require("../connection")
 require("dotenv").config();
 
 const generateToken = async (req, res) => {
@@ -21,21 +21,12 @@ const generateToken = async (req, res) => {
   });
 };
 
-const createUser = async (request, response) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
+const createUser = async (req, res) => {
   const query =
     "INSERT INTO user(name, cpf, email, password, birthdate, academycode, registerstatus) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
-  const body = request.body;
-  const [rows] = await connection.execute(query, [
+  const body = req.body;
+  await connection.execute(query, [
     body.name,
     body.cpf,
     body.email,
@@ -45,32 +36,22 @@ const createUser = async (request, response) => {
     "waiting",
   ]);
 
-  connection.end();
-  response.status(201).json();
+  res.status(201).end();
 };
 
-const changePassword = async (request, response) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
-  const body = request.body;
-  const [rows] = await connection.query(
+const changePassword = async (req, res) => {
+  const body = req.body;
+  const [rows] = await connection.execute(
     "UPDATE `user` SET password = ? WHERE cpf = ? LIMIT 1",
     [body.newpassword, body.cpf]
   );
+
   console.log(rows.affectedRows);
-  connection.end();
 
   if (rows.affectedRows === 0) {
-    return response.status(500).json({ message: "internal server error" });
+    res.status(500).json({ message: "internal server error" });
   }
-  return response.status(200).json();
+  res.status(200).json();
 };
 
 module.exports = {

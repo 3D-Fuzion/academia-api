@@ -1,73 +1,40 @@
-const mysql = require("mysql2/promise");
+const connection = require("../connection")
 const axios = require("axios");
 const FormData = require("form-data");
 
-require("dotenv").config();
-
 const changeSex = async (request, response) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
+  const { body } = request;
 
   const query = "UPDATE `user` SET sex = ? WHERE id = ? LIMIT 1";
 
-  const body = request.body;
-
   const [rows] = await connection.execute(query, [body.sex, body.userid]);
 
-  connection.end();
-
   if (rows.affectedRows > 0) {
-    return response.status(200).end();
+    response.status(200).end();
   }
 
-  return response.status(500).json({ message: "Server Error!" });
+  response.status(500).json({ message: "Server Error!" });
 };
 
 const changeEffectPhrase = async (request, response) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
+  const { body } = request;
 
   const query = "UPDATE `user` SET effectPhrase = ? WHERE id = ? LIMIT 1";
-
-  const body = request.body;
 
   const [rows] = await connection.execute(query, [
     body.effectphrase,
     body.userid,
   ]);
 
-  connection.end();
-
   if (rows.affectedRows > 0) {
-    return response.status(200).end();
+    response.status(200).end();
   }
 
-  return response.status(500).json({ message: "Server Error!" });
+  response.status(500).json({ message: "Server Error!" });
 };
 
 const setImage = async (request, response) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
-  const body = request.body;
+  const { body } = request;
 
   if (!body.userid) {
     response.status(400).json({ message: "USERID is required!" });
@@ -100,51 +67,29 @@ const setImage = async (request, response) => {
     body.userid,
   ]);
 
-  connection.end();
-
   if (rows.affectedRows === 0) {
-    response.status(500).json({ message: "Server Error!" }).end();
+    response.status(500).json({ message: "Server Error!" });
+  } else {
+    response.status(200).json({ imageUrl: res.data.data.display_url });
   }
-
-  response.status(200).json({ imageUrl: res.data.data.display_url }).end();
 };
 
 const changeName = async (request, response) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
   const body = request.body;
 
   const query = "UPDATE `user` SET name = ? WHERE id = ? LIMIT 1";
 
   const [rows] = await connection.execute(query, [body.name, body.userid]);
 
-  connection.end();
-
   if (rows.affectedRows === 0) {
-    return response.status(500).json({ message: "Server Error!" }).end();
+    response.status(500).json({ message: "Server Error!" });
+  } else { 
+    response.status(200).end();
   }
-
-  return response.status(200).end();
 };
 
 const changeBirthDate = async (request, response) => {
-  let connection = mysql.createPool({
-    host: process.env.DATABASE_HOST,
-    user: process.env.DATABASE_USER,
-    password: process.env.DATABASE_PASSWORD,
-    port: process.env.DATABASE_PORT,
-    database: process.env.DATABASE_NAME,
-    connectionLimit: 1,
-  });
-
-  const body = request.body;
+  const { body } = request
 
   const query = "UPDATE `user` SET birthdate = ? WHERE id = ? LIMIT 1";
 
@@ -153,13 +98,11 @@ const changeBirthDate = async (request, response) => {
     body.userid,
   ]);
 
-  connection.end();
-
   if (rows.affectedRows === 0) {
-    return response.status(500).json({ message: "Server Error!" }).end();
+    response.status(500).json({ message: "Server Error!" }).end();
   }
 
-  return response.status(200).end();
+  response.status(200).end();
 };
 
 module.exports = {
