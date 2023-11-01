@@ -1,4 +1,4 @@
-const connection = require("../connection")
+const connection = require("../../database")
 const axios = require("axios");
 const FormData = require("form-data");
 

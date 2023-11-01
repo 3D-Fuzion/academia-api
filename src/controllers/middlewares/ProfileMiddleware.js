@@ -1,4 +1,4 @@
-const connection = require("../../connection")
+const connection = require("../../database")
 
 const validadeSetImageBody = async (req, res, next) => {
   const { body } = req;

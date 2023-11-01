@@ -1,6 +1,5 @@
-const connection = require("../../connection")
+const connection = require("../../database")
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const validadeCreateUserBody = async (req, res, next) => {
   const { body } = req;
@@ -52,7 +51,7 @@ const validadeCreateUserBody = async (req, res, next) => {
     });
   }
 
-  const [rows] = await connection.execute(
+  const [rows] = await connection.query(
     "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `user` WHERE `email` = ?",
     body.email
   );
@@ -64,7 +63,7 @@ const validadeCreateUserBody = async (req, res, next) => {
       .end();
   }
 
-  const [academys] = await connection.execute(
+  const [academys] = await connection.query(
     "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `academy` WHERE `code` = ?",
     body.academycode
   );
@@ -98,7 +97,12 @@ const validadeCredentialsBody = async (req, res, next) => {
     res.status(400).json({ message: "PASSWORD cannot by empty" });
   }
 
-  const [executeResult] = await connection.execute(
+  console.log(process.env.DATABASE_HOST)
+  console.log(process.env.DATABASE_NAME)
+  console.log(process.env.DATABASE_PORT)
+  console.log(process.env.DATABASE_PASSWORD)
+  console.log(process.env.DATABASE_USER)
+  const [executeResult] = await connection.connection.query(
     "SELECT email, password, registerStatus, id, cpf FROM `user` WHERE email= ?",
     [email]
   );
@@ -122,7 +126,6 @@ const validadeCredentialsBody = async (req, res, next) => {
   res.locals.email = executeResult[0].email;
   res.locals.email = executeResult[0].email;
   res.locals.cpf = executeResult[0].cpf;
-
   next();
 };
 
@@ -135,8 +138,8 @@ const validadeChangePwdBody = async (req, res, next) => {
       message: "PASSWORD lenght is less than 8 characters",
     });
   }
-  const [rows] = await connection.execute(
-    "SELECT SQL_SMALL_RESULT SQL_NO_CACHE * FROM `user` WHERE email = ?",
+  const [rows] = await connection.connection.query(
+    "SELECT * FROM `user` WHERE email = ?",
     [body.email]
   );
   if (rows[0] === undefined) {
@@ -156,13 +159,13 @@ const verifyToken = async (req, res, next) => {
   const token = req.headers["auth-token"];
   if (token === undefined) {
     res.status(401).json({ message: "Please send token in auth-token" });
-  } else  { 
-  jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      res.status(401).end();
-    }
-    next();
-  });
+  } else {
+    jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        res.status(401).end();
+      }
+      next();
+    });
   }
 };
 module.exports = {

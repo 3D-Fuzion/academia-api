@@ -1,4 +1,4 @@
-const connection = require("../connection")
+const connection = require("../../database")
 require("dotenv").config();
 
 const getCoach = async (req, res) => {
