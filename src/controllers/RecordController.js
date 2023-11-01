@@ -1,4 +1,4 @@
-const connection = require("../../database")
+const connection = require("../database")
 
 async function setRecord(req, res) {
   const { body } = req;

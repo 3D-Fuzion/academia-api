@@ -1,4 +1,4 @@
-const connection = require("../../database")
+const connection = require("../database")
 
 const getCategories = async (req, res) => {
   const [categories] = await connection.query(

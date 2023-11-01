@@ -97,12 +97,7 @@ const validadeCredentialsBody = async (req, res, next) => {
     res.status(400).json({ message: "PASSWORD cannot by empty" });
   }
 
-  console.log(process.env.DATABASE_HOST)
-  console.log(process.env.DATABASE_NAME)
-  console.log(process.env.DATABASE_PORT)
-  console.log(process.env.DATABASE_PASSWORD)
-  console.log(process.env.DATABASE_USER)
-  const [executeResult] = await connection.connection.query(
+  const [executeResult] = await connection.execute(
     "SELECT email, password, registerStatus, id, cpf FROM `user` WHERE email= ?",
     [email]
   );
