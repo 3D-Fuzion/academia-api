@@ -51,7 +51,7 @@ const validadeCreateUserBody = async (req, res, next) => {
     });
   }
 
-  const [rows] = await connection.query(
+  const [rows] = await connection.execute(
     "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `user` WHERE `email` = ?",
     body.email
   );
@@ -63,7 +63,7 @@ const validadeCreateUserBody = async (req, res, next) => {
       .end();
   }
 
-  const [academys] = await connection.query(
+  const [academys] = await connection.execute(
     "SELECT SQL_SMALL_RESULT SQL_NO_CACHE 1 FROM `academy` WHERE `code` = ?",
     body.academycode
   );
@@ -97,30 +97,28 @@ const validadeCredentialsBody = async (req, res, next) => {
     res.status(400).json({ message: "PASSWORD cannot by empty" });
   }
 
-  const [executeResult] = await connection.execute(
+  const [result] = await connection.execute(
     "SELECT email, password, registerStatus, id, cpf FROM `user` WHERE email= ?",
     [email]
   );
 
-  if (executeResult[0] === undefined) {
-    res
-      .status(404)
-      .json({ message: "No entry with this email is detected" });
-  }
-  if (executeResult[0].registerStatus === "waiting") {
-    res
-      .status(403)
-      .json({ errorCode: "5", message: "User is not accepted" });
+  if (result[0] === undefined) {
+    res.status(404).json({ message: "No entry with this email is detected" });
   }
 
-  if (executeResult[0].password != password) {
+  if (result[0].registerStatus === "waiting") {
+    res.status(403).json({ errorCode: "5", message: "User is not accepted" });
+  }
+
+  if (result[0].password != password) {
     res.status(400).json({ message: "Password is incorrect" });
   }
 
-  res.locals.id = executeResult[0].id;
-  res.locals.email = executeResult[0].email;
-  res.locals.email = executeResult[0].email;
-  res.locals.cpf = executeResult[0].cpf;
+  res.locals.id = result[0].id;
+  res.locals.email = result[0].email;
+  res.locals.email = result[0].email;
+  res.locals.cpf = result[0].cpf;
+  
   next();
 };
 
@@ -133,7 +131,7 @@ const validadeChangePwdBody = async (req, res, next) => {
       message: "PASSWORD lenght is less than 8 characters",
     });
   }
-  const [rows] = await connection.connection.query(
+  const [rows] = await connection.execute(
     "SELECT * FROM `user` WHERE email = ?",
     [body.email]
   );
