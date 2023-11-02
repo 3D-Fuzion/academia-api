@@ -1,6 +1,5 @@
-const connection = require("../../connection")
+const connection = require("../../database")
 const jwt = require("jsonwebtoken");
-require("dotenv").config();
 
 const validadeCreateUserBody = async (req, res, next) => {
   const { body } = req;
@@ -98,31 +97,28 @@ const validadeCredentialsBody = async (req, res, next) => {
     res.status(400).json({ message: "PASSWORD cannot by empty" });
   }
 
-  const [executeResult] = await connection.execute(
+  const [result] = await connection.execute(
     "SELECT email, password, registerStatus, id, cpf FROM `user` WHERE email= ?",
     [email]
   );
 
-  if (executeResult[0] === undefined) {
-    res
-      .status(404)
-      .json({ message: "No entry with this email is detected" });
-  }
-  if (executeResult[0].registerStatus === "waiting") {
-    res
-      .status(403)
-      .json({ errorCode: "5", message: "User is not accepted" });
+  if (result[0] === undefined) {
+    res.status(404).json({ message: "No entry with this email is detected" });
   }
 
-  if (executeResult[0].password != password) {
+  if (result[0].registerStatus === "waiting") {
+    res.status(403).json({ errorCode: "5", message: "User is not accepted" });
+  }
+
+  if (result[0].password != password) {
     res.status(400).json({ message: "Password is incorrect" });
   }
 
-  res.locals.id = executeResult[0].id;
-  res.locals.email = executeResult[0].email;
-  res.locals.email = executeResult[0].email;
-  res.locals.cpf = executeResult[0].cpf;
-
+  res.locals.id = result[0].id;
+  res.locals.email = result[0].email;
+  res.locals.email = result[0].email;
+  res.locals.cpf = result[0].cpf;
+  
   next();
 };
 
@@ -136,7 +132,7 @@ const validadeChangePwdBody = async (req, res, next) => {
     });
   }
   const [rows] = await connection.execute(
-    "SELECT SQL_SMALL_RESULT SQL_NO_CACHE * FROM `user` WHERE email = ?",
+    "SELECT * FROM `user` WHERE email = ?",
     [body.email]
   );
   if (rows[0] === undefined) {
@@ -156,13 +152,13 @@ const verifyToken = async (req, res, next) => {
   const token = req.headers["auth-token"];
   if (token === undefined) {
     res.status(401).json({ message: "Please send token in auth-token" });
-  } else  { 
-  jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err, decoded) => {
-    if (err) {
-      res.status(401).end();
-    }
-    next();
-  });
+  } else {
+    jwt.verify(token, process.env.JWT_TOKEN_SECRET, (err, decoded) => {
+      if (err) {
+        res.status(401).end();
+      }
+      next();
+    });
   }
 };
 module.exports = {

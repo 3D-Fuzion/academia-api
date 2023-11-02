@@ -1,5 +1,5 @@
+const connection = require("../database")
 const jwt = require("jsonwebtoken");
-const connection = require("../connection")
 require("dotenv").config();
 
 const generateToken = async (req, res) => {
