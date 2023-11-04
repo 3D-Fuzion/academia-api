@@ -18,6 +18,7 @@ const generateToken = async (req, res) => {
     id: res.locals.id,
     email: res.locals.email,
     cpf: res.locals.cpf,
+    name: res.locals.name
   });
 };
 

@@ -98,7 +98,7 @@ const validadeCredentialsBody = async (req, res, next) => {
   }
 
   const [result] = await connection.execute(
-    "SELECT email, password, registerStatus, id, cpf FROM `user` WHERE email= ?",
+    "SELECT email, password, registerStatus, id, cpf, name FROM `user` WHERE email= ?",
     [email]
   );
 
@@ -116,8 +116,8 @@ const validadeCredentialsBody = async (req, res, next) => {
 
   res.locals.id = result[0].id;
   res.locals.email = result[0].email;
-  res.locals.email = result[0].email;
   res.locals.cpf = result[0].cpf;
+  res.locals.name = result[0].name;
   
   next();
 };
