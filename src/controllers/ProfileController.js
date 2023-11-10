@@ -105,10 +105,20 @@ const changeBirthDate = async (request, response) => {
   response.status(200).end();
 };
 
+const likePublication = async (request, response) => {
+  //TODO
+};
+
+const starPublication = async (request, response) => {
+  //TODO
+};
+
 module.exports = {
   changeSex,
   changeEffectPhrase,
   setImage,
   changeName,
   changeBirthDate,
+  likePublication, 
+  starPublication
 };
