@@ -67,7 +67,7 @@ async function CreateTables() {
       "name varchar(64) NOT NULL, code int NOT NULL)"
   );
 
-  console.log("Academy table added");
+  console.log("Star table added");
 
   response = await connection.query(
     "CREATE TABLE `likes` (" +
@@ -77,15 +77,6 @@ async function CreateTables() {
   );
 
   console.log("Like table added");
-
-  response = await connection.query(
-    "CREATE TABLE `likes` (" +
-      "id int AUTO_INCREMENT PRIMARY KEY," +
-      "userid int," + 
-      "publiid int)"  
-  );
-
-  console.log("Star table added");
 
   response = await connection.query(
     "CREATE TABLE `manager` (" +

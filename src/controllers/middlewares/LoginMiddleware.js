@@ -7,7 +7,6 @@ const validadeCreateUserBody = async (req, res, next) => {
   if (!body.email) {
     res.status(400).json({ message: "EMAIL is required" });
   }
-
   if (!body.cpf) {
     res.status(400).json({ message: "CPF is required" });
   }
@@ -16,7 +15,7 @@ const validadeCreateUserBody = async (req, res, next) => {
     res.status(400).json({ message: "PASSWORD is required" });
   }
 
-  if (!body.name) {
+   if (!body.name) {
     res.status(400).json({ message: "NAME is required" });
   }
 
@@ -60,7 +59,6 @@ const validadeCreateUserBody = async (req, res, next) => {
     res
       .status(400)
       .json({ errorCode: "1", message: "EMAIL is already registered" })
-      .end();
   }
 
   const [academys] = await connection.execute(
@@ -82,19 +80,19 @@ const validadeCredentialsBody = async (req, res, next) => {
   const { email, password } = req.body;
 
   if (email === undefined) {
-    res.status(400).json({ message: "EMAIL is required" });
+    return res.status(400).json({ message: "EMAIL is required" });
   }
 
   if (email === "") {
-    res.status(400).json({ message: "EMAIL cannot by empty" });
+    return  res.status(400).json({ message: "EMAIL cannot by empty" });
   }
 
   if (password === undefined) {
-    res.status(400).json({ message: "PASSWORD is required" });
+    return res.status(400).json({ message: "PASSWORD is required" });
   }
 
   if (password === "") {
-    res.status(400).json({ message: "PASSWORD cannot by empty" });
+    return res.status(400).json({ message: "PASSWORD cannot by empty" });
   }
 
   const [result] = await connection.execute(
@@ -103,15 +101,15 @@ const validadeCredentialsBody = async (req, res, next) => {
   );
 
   if (result[0] === undefined) {
-    res.status(404).json({ message: "No entry with this email is detected" });
+    return res.status(404).json({ message: "No entry with this email is detected" });
   }
 
   if (result[0].registerStatus === "waiting") {
-    res.status(403).json({ errorCode: "5", message: "User is not accepted" });
+    return res.status(403).json({ errorCode: "5", message: "User is not accepted" });
   }
 
   if (result[0].password != password) {
-    res.status(400).json({ message: "Password is incorrect" });
+    return res.status(400).json({ message: "Password is incorrect" });
   }
 
   res.locals.id = result[0].id;
