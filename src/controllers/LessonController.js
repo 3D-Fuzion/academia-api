@@ -80,8 +80,6 @@ const cancelCheckIn = async (req, res) => {
     [body.id, body.lessonid]
   );
   
-  console.log("User " + body.id + " checkin canceled");
-
   res.status(200).end();
 };
 
