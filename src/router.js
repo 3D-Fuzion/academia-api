@@ -10,6 +10,8 @@ const lessonMiddleware = require("./controllers/middlewares/LessonMiddleware");
 const lessonController = require("./controllers/LessonController");
 const coachController = require("./controllers/CoachController");
 const trainingController = require("./controllers/TrainingController");
+const postMiddleware = require("./controllers/middlewares/PostMiddleware");
+const postController = require("./controllers/PostController");
 
 router.post(
   "/user",
@@ -103,5 +105,7 @@ router.post(
 router.get("/coach", coachController.getCoach);
 
 router.get("/training/categories", trainingController.getCategories);
+
+router.post("/post", postMiddleware.validadeMakePost,  postController.createPublication);
 
 module.exports = router;
