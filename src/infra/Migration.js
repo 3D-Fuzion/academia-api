@@ -106,6 +106,15 @@ async function CreateTables() {
   console.log("Record table added");
 
   response = await connection.query(
+    "CREATE TABLE `post` (" +
+      "id int AUTO_INCREMENT PRIMARY KEY," +
+      "userId int NOT NULL," +
+      "image varchar(255) NOT NULL," +
+      "likes int NOT NULL)"
+  );
+  console.log("Post table added");
+
+  response = await connection.query(
     "CREATE TABLE `training` (" +
       "id int AUTO_INCREMENT PRIMARY KEY," +
       "name varchar(64)," +
