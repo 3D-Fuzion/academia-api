@@ -1,5 +1,3 @@
-const connection = require("../../database")
-
 const validadeMakePost = async (req, res, next) => {
   const { body } = req;
 
