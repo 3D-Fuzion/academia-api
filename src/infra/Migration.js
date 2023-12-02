@@ -109,6 +109,7 @@ async function CreateTables() {
     "CREATE TABLE `post` (" +
       "id int AUTO_INCREMENT PRIMARY KEY," +
       "userId int NOT NULL," +
+      "title varchar(128) NOT NULL," +
       "image varchar(255) NOT NULL," +
       "likes int NOT NULL)"
   );
