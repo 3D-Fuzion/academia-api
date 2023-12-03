@@ -10,7 +10,19 @@ const createPublication = async (request, response) => {
   return response.status(201).end() 
 };
 
+const deletePublication = async (request, response) => {
+  const { body } = request;
+
+  await connection.query(
+    "DELETE FROM `post` WHERE id = ? ",
+    [body.postid] 
+  );
+
+  return response.status(200).end() 
+};
+
 
 module.exports = {
   createPublication,
+  deletePublication
 };
