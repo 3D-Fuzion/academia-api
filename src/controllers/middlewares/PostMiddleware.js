@@ -16,7 +16,18 @@ const validadeMakePost = async (req, res, next) => {
   next();
 }
 
+const validadeDeletePost = async (req, res, next) => {
+  const { body } = req;
+
+  if (!body.postid) {
+    return res.status(400).json({ message: "POST_ID is required!" });
+  }
+
+  next();
+}
+
 
 module.exports = {
   validadeMakePost,
+  validadeDeletePost
 }
