@@ -26,7 +26,6 @@ const validadeDeletePost = async (req, res, next) => {
   next();
 }
 
-
 module.exports = {
   validadeMakePost,
   validadeDeletePost
