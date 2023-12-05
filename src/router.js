@@ -107,6 +107,7 @@ router.get("/coach", coachController.getCoach);
 router.get("/training/categories", trainingController.getCategories);
 
 router.get("/post" , postController.getTenLastPost);
+router.get("/post/:postid" , postMiddleware.getPostById, postController.getPostById);
 router.post("/post", postMiddleware.validadeMakePost,  postController.createPublication);
 router.delete("/post", postMiddleware.validadeDeletePost,  postController.deletePublication);
 
