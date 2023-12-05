@@ -27,9 +27,9 @@ const validadeDeletePost = async (req, res, next) => {
 }
 
 const getPostById = async (req, res, next) => {
-  const { body } = req;
+  const { params } = req;
 
-  if (!body.postid) {
+  if (!params.postid) {
     return res.status(400).json({ message: "POST_ID is required!" });
   }
 
