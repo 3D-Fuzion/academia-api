@@ -1,5 +1,4 @@
 const connection = require("../database");
-const { post } = require("../router");
 
 const createPublication = async (request, response) => {
   const { body } = request;
@@ -30,9 +29,21 @@ const getTenLastPost = async (request, response) => {
   return response.json(posts)
 };
 
+const getPostById = async (request, response) => {
+  const {params} = request
+  
+  const [post] = await connection.query(
+    "SELECT * FROM `post` WHERE ID = ? ",
+    [params.postid]
+  );
+
+  return response.json(post)
+};
+
 
 module.exports = {
   createPublication,
   deletePublication,
-  getTenLastPost
+  getTenLastPost,
+  getPostById
 };
