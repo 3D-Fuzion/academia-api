@@ -1,4 +1,5 @@
-const connection = require("../database")
+const connection = require("../database");
+const { post } = require("../router");
 
 const createPublication = async (request, response) => {
   const { body } = request;
@@ -21,8 +22,17 @@ const deletePublication = async (request, response) => {
   return response.status(200).end() 
 };
 
+const getTenLastPost = async (request, response) => {
+  const [posts] = await connection.query(
+    "SELECT * FROM `post` ORDER BY ID DESC LIMIT 10 "
+  );
+
+  return response.json(posts)
+};
+
 
 module.exports = {
   createPublication,
-  deletePublication
+  deletePublication,
+  getTenLastPost
 };
