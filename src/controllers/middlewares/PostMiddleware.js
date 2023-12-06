@@ -36,8 +36,23 @@ const getPostById = async (req, res, next) => {
   next();
 }
 
+const validateLikePublication = async (req, res, next) => {
+  const { body } = req;
+
+  if (!body.postid) {
+    return res.status(400).json({ message: "POST_ID is required!" });
+  }
+
+  if (!body.userid) {
+    return res.status(400).json({ message: "USER_ID is required!" });
+  }
+
+  next();
+}
+
 module.exports = {
   validadeMakePost,
   validadeDeletePost,
-  getPostById
+  getPostById,
+  validateLikePublication
 }
