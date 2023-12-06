@@ -10,6 +10,22 @@ const createPublication = async (request, response) => {
   return response.status(201).end() 
 };
 
+const likePublication = async (request, response) => {
+  const {body} = request
+  
+  await connection.query(
+    "UPDATE `post` SET likes = likes + 1 WHERE id = ?",
+    [body.postid]
+  );
+
+  await connection.query(
+    "INSERT INTO `likes` (publiid, userid) VALUES (?, ?)",
+    [body.postid, body.userid]
+  );
+
+  return response.status(200).end() 
+};
+
 const deletePublication = async (request, response) => {
   const { body } = request;
 
@@ -45,5 +61,6 @@ module.exports = {
   createPublication,
   deletePublication,
   getTenLastPost,
-  getPostById
+  getPostById,
+  likePublication
 };
