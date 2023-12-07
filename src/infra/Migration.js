@@ -64,7 +64,8 @@ async function CreateTables() {
   response = await connection.query(
     "CREATE TABLE `stars` (" +
       "id int AUTO_INCREMENT PRIMARY KEY," +
-      "name varchar(64) NOT NULL, code int NOT NULL)"
+      "userid int," + 
+      "publiid int)"  
   );
 
   console.log("Star table added");
